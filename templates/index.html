@@ -1,0 +1,328 @@
+{% extends "base.html" %}
+
+{% block title %}{{ config.APP_NAME }} - Handcrafted Wooden Toys & Décor{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<section class="hero-section bg-light py-5">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-lg-6">
+                <h1 class="display-4 fw-bold text-dark mb-4">
+                    Handcrafted with 
+                    <span class="text-primary">Love</span> & 
+                    <span class="text-success">Nature</span>
+                </h1>
+                <p class="lead text-muted mb-4">
+                    Discover our collection of sustainable wooden toys and home décor, 
+                    carefully crafted for your family's joy and your home's beauty.
+                </p>
+                <div class="d-flex gap-3">
+                    <a href="{{ url_for('products') }}" class="btn btn-primary btn-lg">
+                        <i class="bi bi-shop me-2"></i>Shop Now
+                    </a>
+                    <a href="{{ url_for('about') }}" class="btn btn-outline-primary btn-lg">
+                        <i class="bi bi-info-circle me-2"></i>Learn More
+                    </a>
+                </div>
+            </div>
+            <div class="col-lg-6 text-center">
+                <img src="{{ url_for('static', filename='images/hero-wooden-toys.jpg') }}" 
+                     alt="Handcrafted Wooden Toys" 
+                     class="img-fluid rounded shadow-lg min-height-400"
+                     style="object-fit: cover;">
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Features Section -->
+<section class="py-5">
+    <div class="container">
+        <div class="row text-center">
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="feature-card h-100 p-4">
+                    <div class="feature-icon text-success mb-3">
+                        <i class="bi bi-shield-check"></i>
+                    </div>
+                    <h5>Safe & Non-Toxic</h5>
+                    <p class="text-muted">All our products use non-toxic finishes and child-safe materials.</p>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="feature-card h-100 p-4">
+                    <div class="feature-icon text-success mb-3">
+                        <i class="bi bi-tree"></i>
+                    </div>
+                    <h5>Eco-Friendly</h5>
+                    <p class="text-muted">Sustainably sourced wood from responsibly managed forests.</p>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="feature-card h-100 p-4">
+                    <div class="feature-icon text-success mb-3">
+                        <i class="bi bi-hand-thumbs-up"></i>
+                    </div>
+                    <h5>Handcrafted</h5>
+                    <p class="text-muted">Each piece is lovingly handmade by skilled artisans.</p>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="feature-card h-100 p-4">
+                    <div class="feature-icon text-success mb-3">
+                        <i class="bi bi-truck"></i>
+                    </div>
+                    <h5>Free Shipping</h5>
+                    <p class="text-muted">Free delivery on orders above ₹500 across India.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Categories Section -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="fw-bold">Shop by Category</h2>
+            <p class="text-muted">Explore our handcrafted collections</p>
+        </div>
+        
+        <div class="row">
+            {% for category in categories %}
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="category-card position-relative overflow-hidden rounded shadow">
+                    <img src="{{ url_for('static', filename=category.image_url) if category.image_url else url_for('static', filename='images/placeholder-category.jpg') }}" 
+                         alt="{{ category.name }}" 
+                         class="img-fluid w-100" 
+                         style="height: 250px; object-fit: cover;">
+                    <div class="category-overlay position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center">
+                        <div class="text-center text-white">
+                            <h4 class="fw-bold">{{ category.name }}</h4>
+                            <p class="mb-3">{{ category.description }}</p>
+                            <a href="{{ url_for('products', category=category.id) }}" class="btn btn-light btn-sm">
+                                Explore <i class="bi bi-arrow-right ms-1"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Featured Products Section -->
+<section class="py-5">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="fw-bold">Featured Products</h2>
+            <p class="text-muted">Our most loved handcrafted pieces</p>
+        </div>
+        
+        <div class="row">
+            {% for product in featured_products %}
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="product-card card h-100 border-0 shadow-sm">
+                    <div class="position-relative">
+                        <img src="{{ url_for('static', filename=product.image_url) if product.image_url else url_for('static', filename='images/placeholder-product.jpg') }}" 
+                             alt="{{ product.name }}" 
+                             class="card-img-top" 
+                             style="height: 250px; object-fit: cover;">
+                        {% if product.discount_percentage > 0 %}
+                        <span class="position-absolute top-0 end-0 bg-danger text-white px-2 py-1 small rounded-start">
+                            -{{ product.discount_percentage }}%
+                        </span>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="card-body d-flex flex-column">
+                        <h6 class="card-title">{{ product.name }}</h6>
+                        <p class="card-text text-muted small flex-grow-1">{{ product.short_description }}</p>
+                        
+                        <div class="d-flex align-items-center mb-2">
+                            <div class="stars text-warning me-2">
+                                {% for i in range(5) %}
+                                    {% if i < product.average_rating %}
+                                        <i class="bi bi-star-fill"></i>
+                                    {% else %}
+                                        <i class="bi bi-star"></i>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                            <small class="text-muted">({{ product.review_count }})</small>
+                        </div>
+                        
+                        <div class="price mb-3">
+                            <span class="h6 text-primary fw-bold">₹{{ "%.0f"|format(product.price) }}</span>
+                            {% if product.original_price and product.original_price > product.price %}
+                            <span class="text-muted text-decoration-line-through ms-2">₹{{ "%.0f"|format(product.original_price) }}</span>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="d-flex gap-2">
+                            <a href="{{ url_for('product_detail', id=product.id) }}" class="btn btn-outline-primary btn-sm flex-grow-1">
+                                <i class="bi bi-eye me-1"></i>View
+                            </a>
+                            {% if current_user.is_authenticated %}
+                            <form method="POST" action="{{ url_for('add_to_cart', product_id=product.id) }}" class="flex-grow-1">
+                                <input type="hidden" name="quantity" value="1">
+                                <button type="submit" class="btn btn-primary btn-sm w-100">
+                                    <i class="bi bi-bag-plus me-1"></i>Add to Cart
+                                </button>
+                            </form>
+                            {% else %}
+                            <a href="{{ url_for('login') }}" class="btn btn-primary btn-sm flex-grow-1">
+                                <i class="bi bi-bag-plus me-1"></i>Add to Cart
+                            </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        
+        <div class="text-center mt-4">
+            <a href="{{ url_for('products') }}" class="btn btn-outline-primary btn-lg">
+                View All Products <i class="bi bi-arrow-right ms-2"></i>
+            </a>
+        </div>
+    </div>
+</section>
+
+<!-- Latest Products Section -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="fw-bold">New Arrivals</h2>
+            <p class="text-muted">Fresh from our workshop</p>
+        </div>
+        
+        <div class="row">
+            {% for product in latest_products %}
+            <div class="col-lg-3 col-md-6 mb-4">
+                <div class="product-card card h-100 border-0 shadow-sm">
+                    <div class="position-relative">
+                        <img src="{{ url_for('static', filename=product.image_url) if product.image_url else url_for('static', filename='images/placeholder-product.jpg') }}" 
+                             alt="{{ product.name }}" 
+                             class="card-img-top" 
+                             style="height: 250px; object-fit: cover;">
+                        <span class="position-absolute top-0 start-0 bg-success text-white px-2 py-1 small rounded-end">
+                            New
+                        </span>
+                    </div>
+                    
+                    <div class="card-body d-flex flex-column">
+                        <h6 class="card-title">{{ product.name }}</h6>
+                        <p class="card-text text-muted small flex-grow-1">{{ product.short_description }}</p>
+                        
+                        <div class="price mb-3">
+                            <span class="h6 text-primary fw-bold">₹{{ "%.0f"|format(product.price) }}</span>
+                        </div>
+                        
+                        <a href="{{ url_for('product_detail', id=product.id) }}" class="btn btn-outline-primary btn-sm">
+                            <i class="bi bi-eye me-1"></i>View Details
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Testimonials Section -->
+<section class="py-5">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="fw-bold">What Our Customers Say</h2>
+            <p class="text-muted">Love and joy delivered to families across India</p>
+        </div>
+        
+        <div class="row">
+            <div class="col-lg-4 mb-4">
+                <div class="testimonial-card card border-0 shadow-sm h-100">
+                    <div class="card-body text-center">
+                        <div class="stars text-warning mb-3">
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                        </div>
+                        <p class="card-text">"Amazing quality! My daughter loves her wooden puzzle set. The craftsmanship is excellent and it's clear these are made with love."</p>
+                        <div class="mt-3">
+                            <h6 class="mb-0">Priya Sharma</h6>
+                            <small class="text-muted">Mumbai</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-4 mb-4">
+                <div class="testimonial-card card border-0 shadow-sm h-100">
+                    <div class="card-body text-center">
+                        <div class="stars text-warning mb-3">
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                        </div>
+                        <p class="card-text">"Beautiful home décor pieces that perfectly complement our eco-friendly lifestyle. Fast shipping and excellent packaging too!"</p>
+                        <div class="mt-3">
+                            <h6 class="mb-0">Rajesh Kumar</h6>
+                            <small class="text-muted">Delhi</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-4 mb-4">
+                <div class="testimonial-card card border-0 shadow-sm h-100">
+                    <div class="card-body text-center">
+                        <div class="stars text-warning mb-3">
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                            <i class="bi bi-star-fill"></i>
+                        </div>
+                        <p class="card-text">"The wooden blocks set is perfect for my 3-year-old. Safe, educational, and beautifully finished. Highly recommended!"</p>
+                        <div class="mt-3">
+                            <h6 class="mb-0">Anita Verma</h6>
+                            <small class="text-muted">Bangalore</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Newsletter Section -->
+<section class="py-5 bg-primary text-white">
+    <div class="container text-center">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <h3 class="fw-bold mb-3">Stay Updated with WoodNook</h3>
+                <p class="mb-4">Get the latest updates on new arrivals, special offers, and crafting stories straight to your inbox.</p>
+                
+                <form class="row g-3 justify-content-center">
+                    <div class="col-auto">
+                        <input type="email" class="form-control" placeholder="Enter your email" required>
+                    </div>
+                    <div class="col-auto">
+                        <button type="submit" class="btn btn-light">
+                            <i class="bi bi-envelope me-2"></i>Subscribe
+                        </button>
+                    </div>
+                </form>
+                
+                <small class="d-block mt-3 opacity-75">We respect your privacy. Unsubscribe at any time.</small>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,205 @@
+{% extends "base.html" %}
+
+{% block title %}Login - {{ config.APP_NAME }}{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-5">
+            <div class="card shadow-lg border-0 rounded-lg">
+                <div class="card-header bg-primary text-white text-center py-4">
+                    <h3 class="mb-0">
+                        <i class="bi bi-person-circle me-2"></i>
+                        Welcome Back
+                    </h3>
+                    <p class="mb-0 opacity-75">Sign in to your WoodNook account</p>
+                </div>
+                
+                <div class="card-body p-4">
+                    <form method="POST" action="{{ url_for('login') }}" class="needs-validation" novalidate>
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email Address</label>
+                            <div class="input-group">
+                                <span class="input-group-text">
+                                    <i class="bi bi-envelope"></i>
+                                </span>
+                                <input type="email" 
+                                       class="form-control" 
+                                       id="email" 
+                                       name="email" 
+                                       placeholder="Enter your email" 
+                                       required>
+                                <div class="invalid-feedback">
+                                    Please provide a valid email address.
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Password</label>
+                            <div class="input-group">
+                                <span class="input-group-text">
+                                    <i class="bi bi-lock"></i>
+                                </span>
+                                <input type="password" 
+                                       class="form-control" 
+                                       id="password" 
+                                       name="password" 
+                                       placeholder="Enter your password" 
+                                       required>
+                                <button class="btn btn-outline-secondary" 
+                                        type="button" 
+                                        aria-label="Toggle password visibility"
+                                        onclick="togglePassword('password')">
+                                    <i class="bi bi-eye" id="password-toggle"></i>
+                                </button>
+                                <div class="invalid-feedback">
+                                    Please provide your password.
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3 form-check">
+                            <input type="checkbox" class="form-check-input" id="remember" name="remember">
+                            <label class="form-check-label" for="remember">
+                                Remember me for 30 days
+                            </label>
+                        </div>
+                        
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="bi bi-box-arrow-in-right me-2"></i>
+                                Sign In
+                            </button>
+                        </div>
+                    </form>
+                    
+                    <!-- Demo Accounts -->
+                    <div class="mt-4 p-3 bg-light rounded">
+                        <h6 class="text-center mb-3">🎯 Demo Accounts</h6>
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="demo-account text-center">
+                                    <small class="fw-bold d-block">Customer</small>
+                                    <small class="text-muted">customer@demo.com</small>
+                                    <br>
+                                    <small class="text-muted">demo123</small>
+                                    <button type="button" 
+                                            class="btn btn-outline-primary btn-sm mt-1 w-100"
+                                            onclick="fillDemoCredentials('customer@demo.com', 'demo123')">
+                                        Use Demo
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="demo-account text-center">
+                                    <small class="fw-bold d-block">Admin</small>
+                                    <small class="text-muted">admin@woodnook.com</small>
+                                    <br>
+                                    <small class="text-muted">admin123</small>
+                                    <button type="button" 
+                                            class="btn btn-outline-danger btn-sm mt-1 w-100"
+                                            onclick="fillDemoCredentials('admin@woodnook.com', 'admin123')">
+                                        Use Admin
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card-footer bg-transparent text-center py-3">
+                    <p class="mb-0">
+                        Don't have an account? 
+                        <a href="{{ url_for('register') }}" class="text-primary fw-bold">Create Account</a>
+                    </p>
+                    <small class="text-muted">
+                        <a href="#" class="text-decoration-none">Forgot Password?</a>
+                    </small>
+                </div>
+            </div>
+            
+            <!-- Features -->
+            <div class="row mt-4 text-center">
+                <div class="col-4">
+                    <div class="feature-highlight">
+                        <i class="bi bi-shield-check text-success mb-2 d-block" style="font-size: 2rem;"></i>
+                        <small class="text-muted">Secure Login</small>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="feature-highlight">
+                        <i class="bi bi-bag text-primary mb-2 d-block" style="font-size: 2rem;"></i>
+                        <small class="text-muted">Easy Shopping</small>
+                    </div>
+                </div>
+                <div class="col-4">
+                    <div class="feature-highlight">
+                        <i class="bi bi-truck text-success mb-2 d-block" style="font-size: 2rem;"></i>
+                        <small class="text-muted">Fast Delivery</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function togglePassword(inputId) {
+    const input = document.getElementById(inputId);
+    const toggle = document.getElementById(inputId + '-toggle');
+    
+    if (input.type === 'password') {
+        input.type = 'text';
+        toggle.classList.remove('bi-eye');
+        toggle.classList.add('bi-eye-slash');
+    } else {
+        input.type = 'password';
+        toggle.classList.remove('bi-eye-slash');
+        toggle.classList.add('bi-eye');
+    }
+}
+
+function fillDemoCredentials(email, password) {
+    document.getElementById('email').value = email;
+    document.getElementById('password').value = password;
+}
+
+// Form validation
+(function() {
+    'use strict';
+    
+    const form = document.querySelector('.needs-validation');
+    
+    form.addEventListener('submit', function(event) {
+        if (!form.checkValidity()) {
+            event.preventDefault();
+            event.stopPropagation();
+        }
+        
+        form.classList.add('was-validated');
+    }, false);
+})();
+</script>
+
+<style>
+.demo-account {
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.feature-highlight {
+    padding: 1rem;
+}
+
+.card {
+    border-radius: 15px;
+}
+
+.card-header {
+    border-radius: 15px 15px 0 0 !important;
+}
+</style>
+{% endblock %}

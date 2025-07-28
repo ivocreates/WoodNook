@@ -1,0 +1,232 @@
+{% extends "base.html" %}
+
+{% block title %}About Us - {{ config.APP_NAME }}{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <!-- Hero Section -->
+    <div class="row mb-5">
+        <div class="col-12 text-center">
+            <h1 class="display-4 fw-bold text-primary mb-3">About WoodNook</h1>
+            <p class="lead text-muted">Crafting memories, one wooden piece at a time</p>
+        </div>
+    </div>
+
+    <!-- Our Story -->
+    <div class="row align-items-center mb-5">
+        <div class="col-lg-6 mb-4">
+            <h2 class="h3 mb-4">Our Story</h2>
+            <p class="text-muted">
+                WoodNook was born from a simple belief: that handcrafted wooden toys and décor can bring joy, 
+                warmth, and sustainability into our homes. Founded in 2020 by a team of passionate artisans 
+                and eco-conscious parents, we started with a mission to create beautiful, safe, and 
+                environmentally friendly products for families around the world.
+            </p>
+            <p class="text-muted">
+                What began as a small workshop in Mumbai has grown into a community of skilled craftspeople 
+                who pour their hearts into every piece they create. Each product tells a story of tradition, 
+                sustainability, and the timeless appeal of natural wood.
+            </p>
+        </div>
+        <div class="col-lg-6 text-center">
+            <img src="{{ url_for('static', filename='images/about-story.jpg') }}" 
+                 alt="Our Workshop" 
+                 class="img-fluid rounded shadow"
+                 style="max-height: 400px; object-fit: cover;">
+        </div>
+    </div>
+
+    <!-- Our Mission -->
+    <div class="row bg-light rounded p-5 mb-5">
+        <div class="col-12 text-center">
+            <h2 class="h3 mb-4 text-primary">Our Mission</h2>
+            <p class="lead text-muted mb-0">
+                To create beautiful, sustainable wooden products that inspire creativity, 
+                promote learning, and bring families together while caring for our planet.
+            </p>
+        </div>
+    </div>
+
+    <!-- Our Values -->
+    <div class="row mb-5">
+        <div class="col-12 text-center mb-5">
+            <h2 class="h3 text-primary">Our Values</h2>
+            <p class="text-muted">The principles that guide everything we do</p>
+        </div>
+        
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="text-center">
+                <div class="value-icon text-success mb-3">
+                    <i class="bi bi-tree" style="font-size: 3rem;"></i>
+                </div>
+                <h5>Sustainability</h5>
+                <p class="text-muted">
+                    We source our wood from responsibly managed forests and use eco-friendly 
+                    finishes to minimize our environmental impact.
+                </p>
+            </div>
+        </div>
+        
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="text-center">
+                <div class="value-icon text-primary mb-3">
+                    <i class="bi bi-hand-thumbs-up" style="font-size: 3rem;"></i>
+                </div>
+                <h5>Craftsmanship</h5>
+                <p class="text-muted">
+                    Every piece is lovingly handcrafted by skilled artisans who take pride 
+                    in their work and attention to detail.
+                </p>
+            </div>
+        </div>
+        
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="text-center">
+                <div class="value-icon text-warning mb-3">
+                    <i class="bi bi-shield-check" style="font-size: 3rem;"></i>
+                </div>
+                <h5>Safety</h5>
+                <p class="text-muted">
+                    All our products are made with non-toxic materials and undergo rigorous 
+                    safety testing to ensure they're safe for children.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Why Choose Us -->
+    <div class="row mb-5">
+        <div class="col-lg-6 order-lg-2 mb-4">
+            <h2 class="h3 mb-4">Why Choose WoodNook?</h2>
+            <div class="row">
+                <div class="col-12 mb-3">
+                    <div class="d-flex">
+                        <div class="flex-shrink-0 me-3">
+                            <i class="bi bi-check-circle-fill text-success"></i>
+                        </div>
+                        <div>
+                            <h6>Premium Quality Materials</h6>
+                            <p class="text-muted small mb-0">Only the finest hardwoods and non-toxic finishes</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-12 mb-3">
+                    <div class="d-flex">
+                        <div class="flex-shrink-0 me-3">
+                            <i class="bi bi-check-circle-fill text-success"></i>
+                        </div>
+                        <div>
+                            <h6>Unique Designs</h6>
+                            <p class="text-muted small mb-0">Original designs that you won't find anywhere else</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-12 mb-3">
+                    <div class="d-flex">
+                        <div class="flex-shrink-0 me-3">
+                            <i class="bi bi-check-circle-fill text-success"></i>
+                        </div>
+                        <div>
+                            <h6>Fast & Secure Shipping</h6>
+                            <p class="text-muted small mb-0">Quick delivery with careful packaging</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-12 mb-3">
+                    <div class="d-flex">
+                        <div class="flex-shrink-0 me-3">
+                            <i class="bi bi-check-circle-fill text-success"></i>
+                        </div>
+                        <div>
+                            <h6>Customer Support</h6>
+                            <p class="text-muted small mb-0">Dedicated support team ready to help</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-6 order-lg-1 text-center">
+            <img src="{{ url_for('static', filename='images/why-choose-us.jpg') }}" 
+                 alt="Why Choose Us" 
+                 class="img-fluid rounded shadow"
+                 style="max-height: 400px; object-fit: cover;">
+        </div>
+    </div>
+
+    <!-- Team Section -->
+    <div class="row mb-5">
+        <div class="col-12 text-center mb-5">
+            <h2 class="h3 text-primary">Meet Our Team</h2>
+            <p class="text-muted">The passionate people behind WoodNook</p>
+        </div>
+        
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="team-card text-center">
+                <div class="team-photo mb-3">
+                    <img src="{{ url_for('static', filename='images/team-1.jpg') }}" 
+                         alt="Priya Sharma" 
+                         class="rounded-circle"
+                         style="width: 120px; height: 120px; object-fit: cover;">
+                </div>
+                <h5>Priya Sharma</h5>
+                <p class="text-primary mb-2">Founder & CEO</p>
+                <p class="text-muted small">
+                    A passionate advocate for sustainable living and handmade crafts. 
+                    Priya started WoodNook to share her love for wooden toys with the world.
+                </p>
+            </div>
+        </div>
+        
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="team-card text-center">
+                <div class="team-photo mb-3">
+                    <img src="{{ url_for('static', filename='images/team-2.jpg') }}" 
+                         alt="Rajesh Kumar" 
+                         class="rounded-circle"
+                         style="width: 120px; height: 120px; object-fit: cover;">
+                </div>
+                <h5>Rajesh Kumar</h5>
+                <p class="text-primary mb-2">Master Craftsman</p>
+                <p class="text-muted small">
+                    With over 20 years of woodworking experience, Rajesh leads our team of 
+                    artisans and ensures every piece meets our quality standards.
+                </p>
+            </div>
+        </div>
+        
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="team-card text-center">
+                <div class="team-photo mb-3">
+                    <img src="{{ url_for('static', filename='images/team-3.jpg') }}" 
+                         alt="Anita Verma" 
+                         class="rounded-circle"
+                         style="width: 120px; height: 120px; object-fit: cover;">
+                </div>
+                <h5>Anita Verma</h5>
+                <p class="text-primary mb-2">Design Director</p>
+                <p class="text-muted small">
+                    A talented designer who creates the beautiful and functional designs 
+                    that make our products special and loved by families.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Call to Action -->
+    <div class="row">
+        <div class="col-12">
+            <div class="bg-primary text-white rounded p-5 text-center">
+                <h3>Ready to Bring Nature Home?</h3>
+                <p class="mb-4">Explore our collection of handcrafted wooden treasures</p>
+                <a href="{{ url_for('products') }}" class="btn btn-light btn-lg">
+                    <i class="bi bi-shop me-2"></i>Shop Now
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

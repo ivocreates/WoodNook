@@ -1,0 +1,183 @@
+{% extends "base.html" %}
+
+{% block title %}Shopping Cart - {{ config.APP_NAME }}{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row">
+        <div class="col-12">
+            <h1 class="h2 mb-4">
+                <i class="bi bi-bag me-2"></i>Shopping Cart
+                {% if cart_items %}
+                <span class="badge bg-primary">{{ cart_items|length }} items</span>
+                {% endif %}
+            </h1>
+        </div>
+    </div>
+
+    {% if cart_items %}
+    <div class="row">
+        <!-- Cart Items -->
+        <div class="col-lg-8">
+            {% for item in cart_items %}
+            <div class="cart-item card mb-3">
+                <div class="card-body">
+                    <div class="row align-items-center">
+                        <div class="col-md-2 text-center">
+                            <img src="{{ url_for('static', filename=item.product.image_url) if item.product.image_url else url_for('static', filename='images/placeholder-product.jpg') }}" 
+                                 alt="{{ item.product.name }}" 
+                                 class="img-fluid rounded"
+                                 style="height: 80px; object-fit: cover;">
+                        </div>
+                        
+                        <div class="col-md-5">
+                            <h6 class="mb-1">
+                                <a href="{{ url_for('product_detail', id=item.product.id) }}" 
+                                   class="text-decoration-none text-dark">
+                                    {{ item.product.name }}
+                                </a>
+                            </h6>
+                            <p class="text-muted small mb-2">{{ item.product.short_description }}</p>
+                            <div class="product-meta">
+                                <small class="text-muted">
+                                    <i class="bi bi-tag me-1"></i>{{ item.product.category.name }}
+                                </small>
+                                {% if item.product.material %}
+                                <small class="text-muted d-block">
+                                    <i class="bi bi-tree me-1"></i>{{ item.product.material }}
+                                </small>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-2 text-center">
+                            <form method="POST" action="{{ url_for('update_cart', item_id=item.id) }}" class="d-inline">
+                                <select name="quantity" class="form-select form-select-sm" aria-label="Select quantity" onchange="this.form.submit()">
+                                    {% for i in range(1, min(item.product.stock + 1, 11)) %}
+                                    <option value="{{ i }}" {% if i == item.quantity %}selected{% endif %}>{{ i }}</option>
+                                    {% endfor %}
+                                </select>
+                            </form>
+                        </div>
+                        
+                        <div class="col-md-2 text-center">
+                            <div class="price">
+                                <span class="h6 text-primary fw-bold">₹{{ "%.0f"|format(item.total_price) }}</span>
+                                {% if item.quantity > 1 %}
+                                <small class="text-muted d-block">₹{{ "%.0f"|format(item.product.price) }} each</small>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-1 text-center">
+                            <a href="{{ url_for('remove_from_cart', item_id=item.id) }}" 
+                               class="btn btn-outline-danger btn-sm"
+                               aria-label="Remove item from cart"
+                               onclick="return confirm('Remove this item from cart?')">
+                                <i class="bi bi-trash"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+            
+            <!-- Continue Shopping -->
+            <div class="text-center mt-4">
+                <a href="{{ url_for('products') }}" class="btn btn-outline-primary">
+                    <i class="bi bi-arrow-left me-2"></i>Continue Shopping
+                </a>
+            </div>
+        </div>
+
+        <!-- Cart Summary -->
+        <div class="col-lg-4">
+            <div class="cart-summary card">
+                <div class="card-header">
+                    <h5 class="mb-0">Order Summary</h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Subtotal:</span>
+                        <span>₹{{ "%.0f"|format(total) }}</span>
+                    </div>
+                    
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Tax (10%):</span>
+                        <span>₹{{ "%.0f"|format(total * 0.1) }}</span>
+                    </div>
+                    
+                    <div class="d-flex justify-content-between mb-3">
+                        <span>Shipping:</span>
+                        <span>
+                            {% if total >= 500 %}
+                            <span class="text-success">FREE</span>
+                            {% else %}
+                            ₹50
+                            {% endif %}
+                        </span>
+                    </div>
+                    
+                    <hr>
+                    
+                    <div class="d-flex justify-content-between mb-3">
+                        <span class="fw-bold">Total:</span>
+                        <span class="fw-bold h5 text-primary">
+                            ₹{{ "%.0f"|format(total + (total * 0.1) + (0 if total >= 500 else 50)) }}
+                        </span>
+                    </div>
+                    
+                    {% if total < 500 %}
+                    <div class="alert alert-info small">
+                        <i class="bi bi-info-circle me-1"></i>
+                        Add ₹{{ "%.0f"|format(500 - total) }} more for free shipping!
+                    </div>
+                    {% endif %}
+                    
+                    <div class="d-grid">
+                        <a href="{{ url_for('checkout') }}" class="btn btn-success btn-lg">
+                            <i class="bi bi-credit-card me-2"></i>Proceed to Checkout
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Trust Badges -->
+            <div class="card mt-3">
+                <div class="card-body text-center">
+                    <div class="row">
+                        <div class="col-4">
+                            <i class="bi bi-shield-check text-success" style="font-size: 1.5rem;"></i>
+                            <p class="small mb-0 mt-1">Secure Payment</p>
+                        </div>
+                        <div class="col-4">
+                            <i class="bi bi-truck text-primary" style="font-size: 1.5rem;"></i>
+                            <p class="small mb-0 mt-1">Fast Delivery</p>
+                        </div>
+                        <div class="col-4">
+                            <i class="bi bi-arrow-repeat text-success" style="font-size: 1.5rem;"></i>
+                            <p class="small mb-0 mt-1">Easy Returns</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    {% else %}
+    <!-- Empty Cart -->
+    <div class="row">
+        <div class="col-12">
+            <div class="text-center py-5">
+                <i class="bi bi-bag-x text-muted display-1"></i>
+                <h3 class="mt-3">Your cart is empty</h3>
+                <p class="text-muted mb-4">Looks like you haven't added any items to your cart yet.</p>
+                <a href="{{ url_for('products') }}" class="btn btn-primary btn-lg">
+                    <i class="bi bi-shop me-2"></i>Start Shopping
+                </a>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

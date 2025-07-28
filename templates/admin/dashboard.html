@@ -1,0 +1,281 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Dashboard - {{ config.APP_NAME }}{% endblock %}
+
+{% block content %}
+<div class="container-fluid py-4">
+    <div class="row">
+        <!-- Sidebar -->
+        <div class="col-lg-2 col-md-3">
+            <div class="admin-sidebar bg-dark text-white rounded p-3">
+                <h5 class="text-center mb-4">
+                    <i class="bi bi-gear me-2"></i>Admin Panel
+                </h5>
+                
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="{{ url_for('admin_dashboard') }}">
+                            <i class="bi bi-speedometer2 me-2"></i>Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('admin_products') }}">
+                            <i class="bi bi-box-seam me-2"></i>Products
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('admin_orders') }}">
+                            <i class="bi bi-cart3 me-2"></i>Orders
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('admin_categories') }}">
+                            <i class="bi bi-tags me-2"></i>Categories
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('index') }}">
+                            <i class="bi bi-arrow-left me-2"></i>Back to Store
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="col-lg-10 col-md-9">
+            <!-- Welcome Header -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="card bg-primary text-white">
+                        <div class="card-body">
+                            <h3 class="mb-1">Welcome back, {{ current_user.first_name }}!</h3>
+                            <p class="mb-0 opacity-75">Here's what's happening with your store today.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stats Cards -->
+            <div class="row mb-4">
+                <div class="col-xl-3 col-md-6 mb-3">
+                    <div class="card admin-card bg-primary text-white">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <div class="h3 mb-0">{{ total_products }}</div>
+                                    <div class="small">Total Products</div>
+                                </div>
+                                <div>
+                                    <i class="bi bi-box-seam" style="font-size: 2.5rem; opacity: 0.3;"></i>
+                                </div>
+                            </div>
+                            <div class="mt-2">
+                                <a href="{{ url_for('admin_products') }}" class="btn btn-light btn-sm">
+                                    View Products
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-xl-3 col-md-6 mb-3">
+                    <div class="card admin-card bg-success text-white">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <div class="h3 mb-0">{{ total_orders }}</div>
+                                    <div class="small">Total Orders</div>
+                                </div>
+                                <div>
+                                    <i class="bi bi-cart3" style="font-size: 2.5rem; opacity: 0.3;"></i>
+                                </div>
+                            </div>
+                            <div class="mt-2">
+                                <a href="{{ url_for('admin_orders') }}" class="btn btn-light btn-sm">
+                                    View Orders
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-xl-3 col-md-6 mb-3">
+                    <div class="card admin-card bg-info text-white">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <div class="h3 mb-0">{{ total_users }}</div>
+                                    <div class="small">Total Customers</div>
+                                </div>
+                                <div>
+                                    <i class="bi bi-people" style="font-size: 2.5rem; opacity: 0.3;"></i>
+                                </div>
+                            </div>
+                            <div class="mt-2">
+                                <span class="badge bg-light text-dark">Active Users</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-xl-3 col-md-6 mb-3">
+                    <div class="card admin-card bg-warning text-dark">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <div class="h3 mb-0">₹{{ "%.0f"|format(total_revenue) }}</div>
+                                    <div class="small">Total Revenue</div>
+                                </div>
+                                <div>
+                                    <i class="bi bi-currency-rupee" style="font-size: 2.5rem; opacity: 0.3;"></i>
+                                </div>
+                            </div>
+                            <div class="mt-2">
+                                <span class="badge bg-dark">This Month</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="mb-0">
+                                <i class="bi bi-lightning me-2"></i>Quick Actions
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-3 mb-3">
+                                    <a href="{{ url_for('admin_add_product') }}" class="btn btn-primary w-100">
+                                        <i class="bi bi-plus-circle me-2"></i>Add Product
+                                    </a>
+                                </div>
+                                <div class="col-md-3 mb-3">
+                                    <a href="{{ url_for('admin_orders') }}" class="btn btn-success w-100">
+                                        <i class="bi bi-eye me-2"></i>View Orders
+                                    </a>
+                                </div>
+                                <div class="col-md-3 mb-3">
+                                    <button class="btn btn-info w-100" data-bs-toggle="modal" data-bs-target="#addCategoryModal">
+                                        <i class="bi bi-tag me-2"></i>Add Category
+                                    </button>
+                                </div>
+                                <div class="col-md-3 mb-3">
+                                    <a href="{{ url_for('index') }}" class="btn btn-outline-primary w-100">
+                                        <i class="bi bi-eye me-2"></i>View Store
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Orders -->
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0">
+                                <i class="bi bi-clock-history me-2"></i>Recent Orders
+                            </h5>
+                            <a href="{{ url_for('admin_orders') }}" class="btn btn-outline-primary btn-sm">
+                                View All Orders
+                            </a>
+                        </div>
+                        <div class="card-body">
+                            {% if recent_orders %}
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Order #</th>
+                                            <th>Customer</th>
+                                            <th>Date</th>
+                                            <th>Amount</th>
+                                            <th>Status</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for order in recent_orders %}
+                                        <tr>
+                                            <td>
+                                                <strong>{{ order.order_number }}</strong>
+                                            </td>
+                                            <td>
+                                                {{ order.user.first_name }} {{ order.user.last_name }}
+                                                <br>
+                                                <small class="text-muted">{{ order.user.email }}</small>
+                                            </td>
+                                            <td>
+                                                {{ order.created_at.strftime('%B %d, %Y') }}
+                                                <br>
+                                                <small class="text-muted">{{ order.created_at.strftime('%I:%M %p') }}</small>
+                                            </td>
+                                            <td>
+                                                <strong>₹{{ "%.0f"|format(order.total_amount) }}</strong>
+                                            </td>
+                                            <td>
+                                                <span class="badge bg-{{ 'success' if order.status == 'delivered' else 'warning' if order.status == 'shipped' else 'primary' if order.status == 'confirmed' else 'secondary' }}">
+                                                    {{ order.status.title() }}
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <a href="{{ url_for('admin_order_detail', id=order.id) }}" 
+                                                   class="btn btn-outline-primary btn-sm">
+                                                    <i class="bi bi-eye"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            {% else %}
+                            <div class="text-center py-3">
+                                <i class="bi bi-cart-x text-muted" style="font-size: 3rem;"></i>
+                                <p class="text-muted mt-2">No orders yet</p>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Add Category Modal -->
+<div class="modal fade" id="addCategoryModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add New Category</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close add category dialog"></button>
+            </div>
+            <form method="POST" action="{{ url_for('admin_add_category') }}">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="name" class="form-label">Category Name</label>
+                        <input type="text" class="form-control" id="name" name="name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="description" class="form-label">Description</label>
+                        <textarea class="form-control" id="description" name="description" rows="3"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Add Category</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

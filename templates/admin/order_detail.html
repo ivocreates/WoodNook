@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Details - WoodNook Admin</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="{{ url_for('admin_dashboard') }}">
+                <strong>🪵 WoodNook Admin</strong>
+            </a>
+            <div class="navbar-nav ms-auto">
+                <a class="nav-link" href="{{ url_for('admin_dashboard') }}">Dashboard</a>
+                <a class="nav-link" href="{{ url_for('admin_products') }}">Products</a>
+                <a class="nav-link" href="{{ url_for('admin_orders') }}">Orders</a>
+                <a class="nav-link" href="{{ url_for('admin_categories') }}">Categories</a>
+                <a class="nav-link" href="{{ url_for('index') }}">View Site</a>
+                <a class="nav-link" href="{{ url_for('logout') }}">Logout</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <div class="row">
+            <div class="col-12">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h2>Order #{{ order.id }} Details</h2>
+                    <a href="{{ url_for('admin_orders') }}" class="btn btn-outline-secondary">
+                        ← Back to Orders
+                    </a>
+                </div>
+
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% if messages %}
+                        {% for category, message in messages %}
+                            <div class="alert alert-{{ 'danger' if category == 'error' else 'success' }} alert-dismissible fade show" role="alert">
+                                {{ message }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close alert"></button>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <h5>Order Items</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th>Product</th>
+                                                <th>Price</th>
+                                                <th>Quantity</th>
+                                                <th>Subtotal</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for item in order.items %}
+                                            <tr>
+                                                <td>
+                                                    <div class="d-flex align-items-center">
+                                                        <img src="{{ url_for('static', filename='images/' + item.product.image) }}" 
+                                                             alt="{{ item.product.name }}" class="product-thumbnail me-3">
+                                                        <div>
+                                                            <h6 class="mb-0">{{ item.product.name }}</h6>
+                                                            <small class="text-muted">{{ item.product.category.name }}</small>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td>${{ "%.2f"|format(item.price) }}</td>
+                                                <td>{{ item.quantity }}</td>
+                                                <td>${{ "%.2f"|format(item.price * item.quantity) }}</td>
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                        <tfoot>
+                                            <tr>
+                                                <th colspan="3" class="text-end">Total:</th>
+                                                <th>${{ "%.2f"|format(order.total) }}</th>
+                                            </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <h5>Order Information</h5>
+                            </div>
+                            <div class="card-body">
+                                <p><strong>Order Date:</strong><br>
+                                   {{ order.created_at.strftime('%B %d, %Y at %I:%M %p') }}</p>
+                                
+                                <p><strong>Status:</strong><br>
+                                   <select class="form-select" aria-label="Order status" data-order-id="{{ order.id }}">
+                                       <option value="pending" {{ 'selected' if order.status == 'pending' else '' }}>Pending</option>
+                                       <option value="confirmed" {{ 'selected' if order.status == 'confirmed' else '' }}>Confirmed</option>
+                                       <option value="shipped" {{ 'selected' if order.status == 'shipped' else '' }}>Shipped</option>
+                                       <option value="delivered" {{ 'selected' if order.status == 'delivered' else '' }}>Delivered</option>
+                                       <option value="cancelled" {{ 'selected' if order.status == 'cancelled' else '' }}>Cancelled</option>
+                                   </select>
+                                </p>
+                                
+                                <p><strong>Total Amount:</strong><br>
+                                   ₹{{ "%.2f"|format(order.total_amount) }}</p>
+                            </div>
+                        </div>
+
+                        <div class="card mb-4">
+                            <div class="card-header">
+                                <h5>Customer Information</h5>
+                            </div>
+                            <div class="card-body">
+                                <p><strong>Name:</strong><br>
+                                   {{ order.user.name }}</p>
+                                
+                                <p><strong>Email:</strong><br>
+                                   <a href="mailto:{{ order.user.email }}">{{ order.user.email }}</a></p>
+                            </div>
+                        </div>
+
+                        <div class="card">
+                            <div class="card-header">
+                                <h5>Shipping Information</h5>
+                            </div>
+                            <div class="card-body">
+                                <p><strong>Name:</strong><br>
+                                   {{ order.shipping_name }}</p>
+                                
+                                <p><strong>Address:</strong><br>
+                                   {{ order.shipping_address }}<br>
+                                   {{ order.shipping_city }}, {{ order.shipping_state }} {{ order.shipping_zip }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('change', function(e) {
+            if (e.target.matches('select[data-order-id]')) {
+                const orderId = e.target.dataset.orderId;
+                const newStatus = e.target.value;
+                updateOrderStatus(orderId, newStatus);
+            }
+        });
+        
+        function updateOrderStatus(orderId, newStatus) {
+            fetch(`/admin/order/${orderId}/status`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ status: newStatus })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Show success message
+                    const alertDiv = document.createElement('div');
+                    alertDiv.className = 'alert alert-success alert-dismissible fade show';
+                    alertDiv.innerHTML = `
+                        Order status updated successfully!
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close alert"></button>
+                    `;
+                    document.querySelector('.container .row .col-12').insertBefore(alertDiv, document.querySelector('.row:last-child'));
+                } else {
+                    alert('Error updating order status: ' + data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Error updating order status');
+            });
+        }
+    </script>
+</body>
+</html>

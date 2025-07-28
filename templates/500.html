@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>500 - Server Error - WoodNook</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="{{ url_for('index') }}">
+                <strong>🪵 WoodNook</strong>
+            </a>
+            <div class="navbar-nav ms-auto">
+                <a class="nav-link" href="{{ url_for('index') }}">Home</a>
+                <a class="nav-link" href="{{ url_for('products') }}">Products</a>
+                {% if current_user.is_authenticated %}
+                    <a class="nav-link" href="{{ url_for('logout') }}">Logout ({{ current_user.full_name }})</a>
+                {% else %}
+                    <a class="nav-link" href="{{ url_for('login') }}">Login</a>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-md-6 mx-auto text-center">
+                <div class="error-page">
+                    <h1 class="display-1 text-muted">500</h1>
+                    <h2 class="mb-4">Internal Server Error</h2>
+                    <p class="lead mb-4">
+                        Something went wrong on our end. Our craftsmen are working hard to fix this issue. 
+                        Please try again in a moment.
+                    </p>
+                    <div class="mb-4">
+                        <svg width="100" height="100" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <rect x="20" y="40" width="60" height="30" fill="#8B4513" rx="5"/>
+                            <rect x="25" y="45" width="50" height="20" fill="#A0522D" rx="3"/>
+                            <path d="M30 50 L35 60 L40 50 L45 60 L50 50 L55 60 L60 50 L65 60 L70 50" stroke="#654321" stroke-width="2" fill="none"/>
+                            <rect x="35" y="25" width="30" height="15" fill="#D2691E" rx="2"/>
+                            <text x="50" y="85" text-anchor="middle" fill="#8B4513" font-size="8">Broken Tool</text>
+                        </svg>
+                    </div>
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-center">
+                        <a href="{{ url_for('index') }}" class="btn btn-primary btn-lg">
+                            🏠 Go Home
+                        </a>
+                        <a href="javascript:history.back()" class="btn btn-outline-primary btn-lg">
+                            ⬅️ Go Back
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="bg-dark text-light py-4 mt-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <h5>🪵 WoodNook</h5>
+                    <p>Handcrafted Wooden Toys & Décor</p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <p>&copy; 2024 WoodNook. All rights reserved.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -653,6 +653,52 @@ footer .social-links a:hover {
     background: #654321;
 }
 
+/* Payment Method Styles */
+.payment-method {
+    transition: all 0.3s ease;
+    border: 2px solid #dee2e6;
+    background-color: #fff;
+}
+
+.payment-method:hover {
+    border-color: #6c757d;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    transform: translateY(-2px);
+}
+
+.payment-method.border-primary {
+    border-color: var(--primary-color) !important;
+    background-color: #f8f9fa;
+}
+
+.payment-method .card-body {
+    padding: 1.5rem 1rem;
+}
+
+.payment-method i {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+}
+
+.payment-method h6 {
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+}
+
+.payment-method small {
+    font-size: 0.85rem;
+    color: #6c757d;
+}
+
+.payment-details {
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
 /* Print Styles */
 @media print {
     .navbar, footer, .btn, .alert {

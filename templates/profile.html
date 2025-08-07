@@ -239,9 +239,9 @@
                                                     {{ order.status.title() }}
                                                 </span>
                                             </td>
-                                            <td>${{ "%.2f"|format(order.total) }}</td>
+                                            <td>₹{{ "%.2f"|format(order.total_amount) }}</td>
                                             <td>
-                                                <a href="{{ url_for('order_detail', id=order.id) }}" class="btn btn-sm btn-outline-primary">
+                                                <a href="{{ url_for('order_detail', order_id=order.id) }}" class="btn btn-sm btn-outline-primary">
                                                     View
                                                 </a>
                                             </td>

@@ -97,7 +97,7 @@
                         </div>
                         
                         <div class="action-buttons mt-4">
-                            <a href="{{ url_for('order_detail', id=order.id) }}" class="btn btn-primary">
+                            <a href="{{ url_for('order_detail', order_id=order.id) }}" class="btn btn-primary">
                                 View Order Details
                             </a>
                             <a href="{{ url_for('products') }}" class="btn btn-outline-secondary">

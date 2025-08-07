@@ -91,6 +91,11 @@ class Product(db.Model):
         if self.original_price and self.original_price > self.price:
             return int(((self.original_price - self.price) / self.original_price) * 100)
         return 0
+    
+    @property
+    def image(self):
+        """Backward compatibility property for image_url"""
+        return self.image_url
 
 class CartItem(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -140,6 +145,11 @@ class Order(db.Model):
     
     # Relationships
     items = db.relationship('OrderItem', backref='order', lazy=True, cascade='all, delete-orphan')
+    
+    @property
+    def total(self):
+        """Backward compatibility property for total_amount"""
+        return self.total_amount
 
 class OrderItem(db.Model):
     id = db.Column(db.Integer, primary_key=True)

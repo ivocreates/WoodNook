@@ -105,7 +105,7 @@
                                     <h6>Order Items</h6>
                                     {% for item in order.items %}
                                     <div class="d-flex align-items-center mb-2">
-                                        <img src="{{ url_for('static', filename='images/' + item.product.image_url) }}" 
+                                        <img src="{{ url_for('static', filename=item.product.image_url) if item.product.image_url else url_for('static', filename='images/placeholder-product.jpg') }}" 
                                              alt="{{ item.product.name }}" class="product-thumbnail me-3">
                                         <div class="flex-grow-1">
                                             <h6 class="mb-0">{{ item.product.name }}</h6>
@@ -127,11 +127,11 @@
                                         </div>
                                         <div class="d-flex justify-content-between">
                                             <strong>Total Amount:</strong>
-                                            <strong>${{ "%.2f"|format(order.total) }}</strong>
+                                            <strong>₹{{ "%.2f"|format(order.total_amount) }}</strong>
                                         </div>
                                         <hr>
                                         <div class="d-grid">
-                                            <a href="{{ url_for('order_detail', id=order.id) }}" class="btn btn-outline-primary btn-sm">
+                                            <a href="{{ url_for('order_detail', order_id=order.id) }}" class="btn btn-outline-primary btn-sm">
                                                 View Details
                                             </a>
                                         </div>

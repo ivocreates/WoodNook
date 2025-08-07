@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Checkout - WoodNook</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
 </head>
 <body>
@@ -52,8 +53,6 @@
                         </li>
                     {% endif %}
                 </ul>
-                        </li>
-                    {% endif %}</ul>
             </div>
         </div>
     </nav>
@@ -186,36 +185,159 @@
                         </div>
                         <div class="card-body">
                             <div class="alert alert-info">
-                                <strong>Demo Payment:</strong> This is a demo application. Use any test card details for checkout.
-                                <br><small>Example: 4242 4242 4242 4242, any future date, any 3-digit CVV</small>
-                                <br><small>All payments are processed securely. In production, use Razorpay/PayU for Indian payments.</small>
+                                <strong>Demo Payment:</strong> This is a demo application. Select any payment method below to proceed.
+                                <br><small>In production, integrate with Razorpay, PayU, or Paytm for real payments.</small>
                             </div>
                             
-                            <div class="mb-3">
-                                <label for="card_number" class="form-label">Card Number</label>
-                                <input type="text" class="form-control" id="card_number" name="card_number" 
-                                       placeholder="4242 4242 4242 4242" maxlength="19" required>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="mb-3">
-                                        <label for="card_expiry" class="form-label">Expiry Date</label>
-                                        <input type="text" class="form-control" id="card_expiry" name="card_expiry" 
-                                               placeholder="MM/YY" maxlength="5" required>
+                            <!-- Payment Method Selection -->
+                            <div class="mb-4">
+                                <label class="form-label">Select Payment Method</label>
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <div class="card payment-method" onclick="selectPaymentMethod('upi')">
+                                            <div class="card-body text-center">
+                                                <i class="fas fa-mobile-alt fa-2x text-primary mb-2"></i>
+                                                <h6>UPI Payment</h6>
+                                                <small class="text-muted">Pay using Google Pay, PhonePe, Paytm</small>
+                                                <input type="radio" name="payment_method" value="upi" id="upi" class="d-none">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <div class="card payment-method" onclick="selectPaymentMethod('netbanking')">
+                                            <div class="card-body text-center">
+                                                <i class="fas fa-university fa-2x text-success mb-2"></i>
+                                                <h6>Net Banking</h6>
+                                                <small class="text-muted">SBI, HDFC, ICICI, Axis Bank</small>
+                                                <input type="radio" name="payment_method" value="netbanking" id="netbanking" class="d-none">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <div class="card payment-method" onclick="selectPaymentMethod('debit_card')">
+                                            <div class="card-body text-center">
+                                                <i class="fas fa-credit-card fa-2x text-warning mb-2"></i>
+                                                <h6>Debit Card</h6>
+                                                <small class="text-muted">Visa, Mastercard, RuPay</small>
+                                                <input type="radio" name="payment_method" value="debit_card" id="debit_card" class="d-none">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <div class="card payment-method" onclick="selectPaymentMethod('credit_card')">
+                                            <div class="card-body text-center">
+                                                <i class="fas fa-credit-card fa-2x text-info mb-2"></i>
+                                                <h6>Credit Card</h6>
+                                                <small class="text-muted">Visa, Mastercard, American Express</small>
+                                                <input type="radio" name="payment_method" value="credit_card" id="credit_card" class="d-none">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <div class="card payment-method" onclick="selectPaymentMethod('wallet')">
+                                            <div class="card-body text-center">
+                                                <i class="fas fa-wallet fa-2x text-danger mb-2"></i>
+                                                <h6>Digital Wallet</h6>
+                                                <small class="text-muted">Paytm, PhonePe, Amazon Pay</small>
+                                                <input type="radio" name="payment_method" value="wallet" id="wallet" class="d-none">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <div class="card payment-method" onclick="selectPaymentMethod('cod')">
+                                            <div class="card-body text-center">
+                                                <i class="fas fa-money-bill-wave fa-2x text-secondary mb-2"></i>
+                                                <h6>Cash on Delivery</h6>
+                                                <small class="text-muted">Pay when you receive</small>
+                                                <input type="radio" name="payment_method" value="cod" id="cod" class="d-none">
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="col-md-6">
+                            </div>
+
+                            <!-- Payment Details Section (Initially Hidden) -->
+                            <div id="payment-details" class="d-none">
+                                <div id="upi-details" class="payment-details d-none">
                                     <div class="mb-3">
-                                        <label for="card_cvv" class="form-label">CVV</label>
-                                        <input type="text" class="form-control" id="card_cvv" name="card_cvv" 
-                                               placeholder="123" maxlength="3" required>
+                                        <label for="upi_id" class="form-label">UPI ID</label>
+                                        <input type="text" class="form-control" id="upi_id" name="upi_id" 
+                                               placeholder="yourname@paytm or yourname@googlepay">
                                     </div>
                                 </div>
-                            </div>
-                            <div class="mb-3">
-                                <label for="card_name" class="form-label">Name on Card</label>
-                                <input type="text" class="form-control" id="card_name" name="card_name" 
-                                       value="{{ current_user.full_name }}" required>
+
+                                <div id="netbanking-details" class="payment-details d-none">
+                                    <div class="mb-3">
+                                        <label for="bank" class="form-label">Select Bank</label>
+                                        <select class="form-control" id="bank" name="bank">
+                                            <option value="">Choose your bank</option>
+                                            <option value="sbi">State Bank of India</option>
+                                            <option value="hdfc">HDFC Bank</option>
+                                            <option value="icici">ICICI Bank</option>
+                                            <option value="axis">Axis Bank</option>
+                                            <option value="pnb">Punjab National Bank</option>
+                                            <option value="bob">Bank of Baroda</option>
+                                            <option value="canara">Canara Bank</option>
+                                            <option value="union">Union Bank</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div id="card-details" class="payment-details d-none">
+                                    <div class="mb-3">
+                                        <label for="card_number" class="form-label">Card Number</label>
+                                        <input type="text" class="form-control" id="card_number" name="card_number" 
+                                               placeholder="1234 5678 9012 3456" maxlength="19">
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="mb-3">
+                                                <label for="card_expiry" class="form-label">Expiry Date</label>
+                                                <input type="text" class="form-control" id="card_expiry" name="card_expiry" 
+                                                       placeholder="MM/YY" maxlength="5">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="mb-3">
+                                                <label for="card_cvv" class="form-label">CVV</label>
+                                                <input type="text" class="form-control" id="card_cvv" name="card_cvv" 
+                                                       placeholder="123" maxlength="4">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="card_name" class="form-label">Name on Card</label>
+                                        <input type="text" class="form-control" id="card_name" name="card_name" 
+                                               value="{{ current_user.full_name }}">
+                                    </div>
+                                </div>
+
+                                <div id="wallet-details" class="payment-details d-none">
+                                    <div class="mb-3">
+                                        <label for="wallet_type" class="form-label">Select Wallet</label>
+                                        <select class="form-control" id="wallet_type" name="wallet_type">
+                                            <option value="">Choose wallet</option>
+                                            <option value="paytm">Paytm Wallet</option>
+                                            <option value="phonepe">PhonePe</option>
+                                            <option value="amazonpay">Amazon Pay</option>
+                                            <option value="mobikwik">MobiKwik</option>
+                                            <option value="freecharge">FreeCharge</option>
+                                        </select>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="wallet_mobile" class="form-label">Mobile Number</label>
+                                        <input type="text" class="form-control" id="wallet_mobile" name="wallet_mobile" 
+                                               placeholder="Enter your mobile number" value="{{ current_user.phone }}">
+                                    </div>
+                                </div>
+
+                                <div id="cod-details" class="payment-details d-none">
+                                    <div class="alert alert-warning">
+                                        <i class="fas fa-info-circle me-2"></i>
+                                        <strong>Cash on Delivery:</strong> You will pay ₹{{ "%.2f"|format(total) }} when the order is delivered.
+                                        <br><small>Please keep exact change ready. COD charges of ₹25 apply for orders below ₹500.</small>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -230,7 +352,7 @@
                             {% for item in cart_items %}
                             <div class="d-flex justify-content-between align-items-center mb-3">
                                 <div class="d-flex align-items-center">
-                                    <img src="{{ url_for('static', filename='images/' + item.product.image_url) }}" 
+                                    <img src="{{ url_for('static', filename=item.product.image_url) if item.product.image_url else url_for('static', filename='images/placeholder-product.jpg') }}" 
                                          alt="{{ item.product.name }}" class="product-thumbnail me-2">
                                     <div>
                                         <h6 class="mb-0">{{ item.product.name }}</h6>
@@ -359,6 +481,144 @@
                 e.preventDefault();
                 return;
             }
+
+            // Check if payment method is selected
+            const paymentMethod = document.querySelector('input[name="payment_method"]:checked');
+            if (!paymentMethod) {
+                alert('Please select a payment method');
+                e.preventDefault();
+                return;
+            }
+
+            // Validate payment method specific fields
+            if (paymentMethod.value === 'upi') {
+                const upiId = document.getElementById('upi_id').value;
+                if (!upiId || !upiId.includes('@')) {
+                    alert('Please enter a valid UPI ID');
+                    e.preventDefault();
+                    return;
+                }
+            } else if (paymentMethod.value === 'netbanking') {
+                const bank = document.getElementById('bank').value;
+                if (!bank) {
+                    alert('Please select a bank');
+                    e.preventDefault();
+                    return;
+                }
+            } else if (paymentMethod.value === 'debit_card' || paymentMethod.value === 'credit_card') {
+                const cardNumber = document.getElementById('card_number').value;
+                const cardExpiry = document.getElementById('card_expiry').value;
+                const cardCvv = document.getElementById('card_cvv').value;
+                const cardName = document.getElementById('card_name').value;
+
+                if (!cardNumber || cardNumber.length < 16) {
+                    alert('Please enter a valid card number');
+                    e.preventDefault();
+                    return;
+                }
+                if (!cardExpiry || !cardExpiry.match(/^\d{2}\/\d{2}$/)) {
+                    alert('Please enter expiry date in MM/YY format');
+                    e.preventDefault();
+                    return;
+                }
+                if (!cardCvv || cardCvv.length < 3) {
+                    alert('Please enter a valid CVV');
+                    e.preventDefault();
+                    return;
+                }
+                if (!cardName) {
+                    alert('Please enter name on card');
+                    e.preventDefault();
+                    return;
+                }
+            } else if (paymentMethod.value === 'wallet') {
+                const walletType = document.getElementById('wallet_type').value;
+                const walletMobile = document.getElementById('wallet_mobile').value;
+                if (!walletType) {
+                    alert('Please select a wallet');
+                    e.preventDefault();
+                    return;
+                }
+                if (!walletMobile || walletMobile.length !== 10) {
+                    alert('Please enter a valid mobile number');
+                    e.preventDefault();
+                    return;
+                }
+            }
+        });
+
+        // Payment method selection functionality
+        function selectPaymentMethod(method) {
+            // Remove active class from all payment methods
+            document.querySelectorAll('.payment-method').forEach(card => {
+                card.classList.remove('border-primary', 'bg-light');
+            });
+
+            // Add active class to selected method
+            event.target.closest('.payment-method').classList.add('border-primary', 'bg-light');
+
+            // Check the radio button
+            document.getElementById(method).checked = true;
+
+            // Show payment details section
+            document.getElementById('payment-details').classList.remove('d-none');
+
+            // Hide all payment detail sections
+            document.querySelectorAll('.payment-details').forEach(section => {
+                section.classList.add('d-none');
+            });
+
+            // Show relevant payment details
+            if (method === 'upi') {
+                document.getElementById('upi-details').classList.remove('d-none');
+            } else if (method === 'netbanking') {
+                document.getElementById('netbanking-details').classList.remove('d-none');
+            } else if (method === 'debit_card' || method === 'credit_card') {
+                document.getElementById('card-details').classList.remove('d-none');
+            } else if (method === 'wallet') {
+                document.getElementById('wallet-details').classList.remove('d-none');
+            } else if (method === 'cod') {
+                document.getElementById('cod-details').classList.remove('d-none');
+            }
+        }
+
+        // Format card number input
+        document.addEventListener('DOMContentLoaded', function() {
+            const cardNumberInput = document.getElementById('card_number');
+            if (cardNumberInput) {
+                cardNumberInput.addEventListener('input', function(e) {
+                    let value = e.target.value.replace(/\D/g, '');
+                    value = value.replace(/(\d{4})(?=\d)/g, '$1 ');
+                    e.target.value = value;
+                });
+            }
+
+            const cardExpiryInput = document.getElementById('card_expiry');
+            if (cardExpiryInput) {
+                cardExpiryInput.addEventListener('input', function(e) {
+                    let value = e.target.value.replace(/\D/g, '');
+                    if (value.length >= 2) {
+                        value = value.substring(0, 2) + '/' + value.substring(2, 4);
+                    }
+                    e.target.value = value;
+                });
+            }
+        });
+
+        // Add hover effects to payment methods
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.payment-method').forEach(card => {
+                card.style.cursor = 'pointer';
+                card.addEventListener('mouseenter', function() {
+                    if (!this.classList.contains('border-primary')) {
+                        this.classList.add('border-secondary');
+                    }
+                });
+                card.addEventListener('mouseleave', function() {
+                    this.classList.remove('border-secondary');
+                });
+            });
+        });
         });
     </script>
 </body>

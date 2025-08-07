@@ -87,10 +87,10 @@
                             <div class="mb-3">
                                 <label for="image" class="form-label">Product Image</label>
                                 <input type="file" class="form-control" id="image" name="image" accept="image/*">
-                                {% if product.image %}
+                                {% if product.image_url %}
                                     <div class="mt-2">
-                                        <small class="text-muted">Current image: {{ product.image }}</small><br>
-                                        <img src="{{ url_for('static', filename='images/' + product.image) }}" 
+                                        <small class="text-muted">Current image: {{ product.image_url }}</small><br>
+                                        <img src="{{ url_for('static', filename=product.image_url) }}" 
                                              alt="Current product image" class="img-thumbnail mt-1 product-image-preview">
                                     </div>
                                 {% endif %}

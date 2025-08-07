@@ -197,11 +197,38 @@ def place_order():
         flash('Your cart is empty!', 'warning')
         return redirect(url_for('cart'))
     
+    # Get payment method
+    payment_method = request.form.get('payment_method', 'demo_payment')
+    
     # Calculate totals
     subtotal = sum(item.total_price for item in cart_items)
     tax = subtotal * 0.18  # 18% GST for India
     shipping = 50 if subtotal < 500 else 0
+    
+    # Add COD charges if applicable
+    if payment_method == 'cod' and subtotal < 500:
+        shipping += 25  # COD charges
+    
     total = subtotal + tax + shipping
+    
+    # Determine payment status based on method
+    if payment_method == 'cod':
+        payment_status = 'pending'  # COD orders are pending until delivered
+    else:
+        payment_status = 'paid'  # Demo payments are auto-approved
+    
+    # Get payment details based on method
+    payment_details = {}
+    if payment_method == 'upi':
+        payment_details['upi_id'] = request.form.get('upi_id', '')
+    elif payment_method == 'netbanking':
+        payment_details['bank'] = request.form.get('bank', '')
+    elif payment_method in ['debit_card', 'credit_card']:
+        payment_details['card_number'] = request.form.get('card_number', '')[-4:]  # Store only last 4 digits
+        payment_details['card_name'] = request.form.get('card_name', '')
+    elif payment_method == 'wallet':
+        payment_details['wallet_type'] = request.form.get('wallet_type', '')
+        payment_details['wallet_mobile'] = request.form.get('wallet_mobile', '')
     
     # Create order
     order = Order(
@@ -218,9 +245,10 @@ def place_order():
         shipping_state=request.form['shipping_state'],
         shipping_zip=request.form['shipping_zip'],
         shipping_country='India',
-        payment_method='demo_payment',
+        payment_method=payment_method,
         status='pending',
-        payment_status='paid'
+        payment_status=payment_status,
+        payment_transaction_id=f"TXN{datetime.now().strftime('%Y%m%d%H%M%S')}{str(uuid.uuid4())[:6].upper()}"
     )
     
     db.session.add(order)
@@ -241,7 +269,12 @@ def place_order():
     
     db.session.commit()
     
-    flash(f'Order {order.order_number} placed successfully!', 'success')
+    # Display appropriate success message based on payment method
+    if payment_method == 'cod':
+        flash(f'Order {order.order_number} placed successfully! You will pay ₹{total:.2f} on delivery.', 'success')
+    else:
+        flash(f'Order {order.order_number} placed successfully! Payment of ₹{total:.2f} processed via {payment_method.replace("_", " ").title()}.', 'success')
+    
     return redirect(url_for('order_success', order_id=order.id))
 
 @app.route('/order_success/<int:order_id>')

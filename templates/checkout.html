@@ -184,11 +184,6 @@
                             <h5>Payment Information</h5>
                         </div>
                         <div class="card-body">
-                            <div class="alert alert-info">
-                                <strong>Demo Payment:</strong> This is a demo application. Select any payment method below to proceed.
-                                <br><small>In production, integrate with Razorpay, PayU, or Paytm for real payments.</small>
-                            </div>
-                            
                             <!-- Payment Method Selection -->
                             <div class="mb-4">
                                 <label class="form-label">Select Payment Method</label>
@@ -200,46 +195,6 @@
                                                 <h6>UPI Payment</h6>
                                                 <small class="text-muted">Pay using Google Pay, PhonePe, Paytm</small>
                                                 <input type="radio" name="payment_method" value="upi" id="upi" class="d-none">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6 mb-3">
-                                        <div class="card payment-method" onclick="selectPaymentMethod('netbanking')">
-                                            <div class="card-body text-center">
-                                                <i class="fas fa-university fa-2x text-success mb-2"></i>
-                                                <h6>Net Banking</h6>
-                                                <small class="text-muted">SBI, HDFC, ICICI, Axis Bank</small>
-                                                <input type="radio" name="payment_method" value="netbanking" id="netbanking" class="d-none">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6 mb-3">
-                                        <div class="card payment-method" onclick="selectPaymentMethod('debit_card')">
-                                            <div class="card-body text-center">
-                                                <i class="fas fa-credit-card fa-2x text-warning mb-2"></i>
-                                                <h6>Debit Card</h6>
-                                                <small class="text-muted">Visa, Mastercard, RuPay</small>
-                                                <input type="radio" name="payment_method" value="debit_card" id="debit_card" class="d-none">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6 mb-3">
-                                        <div class="card payment-method" onclick="selectPaymentMethod('credit_card')">
-                                            <div class="card-body text-center">
-                                                <i class="fas fa-credit-card fa-2x text-info mb-2"></i>
-                                                <h6>Credit Card</h6>
-                                                <small class="text-muted">Visa, Mastercard, American Express</small>
-                                                <input type="radio" name="payment_method" value="credit_card" id="credit_card" class="d-none">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6 mb-3">
-                                        <div class="card payment-method" onclick="selectPaymentMethod('wallet')">
-                                            <div class="card-body text-center">
-                                                <i class="fas fa-wallet fa-2x text-danger mb-2"></i>
-                                                <h6>Digital Wallet</h6>
-                                                <small class="text-muted">Paytm, PhonePe, Amazon Pay</small>
-                                                <input type="radio" name="payment_method" value="wallet" id="wallet" class="d-none">
                                             </div>
                                         </div>
                                     </div>
@@ -263,71 +218,6 @@
                                         <label for="upi_id" class="form-label">UPI ID</label>
                                         <input type="text" class="form-control" id="upi_id" name="upi_id" 
                                                placeholder="yourname@paytm or yourname@googlepay">
-                                    </div>
-                                </div>
-
-                                <div id="netbanking-details" class="payment-details d-none">
-                                    <div class="mb-3">
-                                        <label for="bank" class="form-label">Select Bank</label>
-                                        <select class="form-control" id="bank" name="bank">
-                                            <option value="">Choose your bank</option>
-                                            <option value="sbi">State Bank of India</option>
-                                            <option value="hdfc">HDFC Bank</option>
-                                            <option value="icici">ICICI Bank</option>
-                                            <option value="axis">Axis Bank</option>
-                                            <option value="pnb">Punjab National Bank</option>
-                                            <option value="bob">Bank of Baroda</option>
-                                            <option value="canara">Canara Bank</option>
-                                            <option value="union">Union Bank</option>
-                                        </select>
-                                    </div>
-                                </div>
-
-                                <div id="card-details" class="payment-details d-none">
-                                    <div class="mb-3">
-                                        <label for="card_number" class="form-label">Card Number</label>
-                                        <input type="text" class="form-control" id="card_number" name="card_number" 
-                                               placeholder="1234 5678 9012 3456" maxlength="19">
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <div class="mb-3">
-                                                <label for="card_expiry" class="form-label">Expiry Date</label>
-                                                <input type="text" class="form-control" id="card_expiry" name="card_expiry" 
-                                                       placeholder="MM/YY" maxlength="5">
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="mb-3">
-                                                <label for="card_cvv" class="form-label">CVV</label>
-                                                <input type="text" class="form-control" id="card_cvv" name="card_cvv" 
-                                                       placeholder="123" maxlength="4">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="card_name" class="form-label">Name on Card</label>
-                                        <input type="text" class="form-control" id="card_name" name="card_name" 
-                                               value="{{ current_user.full_name }}">
-                                    </div>
-                                </div>
-
-                                <div id="wallet-details" class="payment-details d-none">
-                                    <div class="mb-3">
-                                        <label for="wallet_type" class="form-label">Select Wallet</label>
-                                        <select class="form-control" id="wallet_type" name="wallet_type">
-                                            <option value="">Choose wallet</option>
-                                            <option value="paytm">Paytm Wallet</option>
-                                            <option value="phonepe">PhonePe</option>
-                                            <option value="amazonpay">Amazon Pay</option>
-                                            <option value="mobikwik">MobiKwik</option>
-                                            <option value="freecharge">FreeCharge</option>
-                                        </select>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="wallet_mobile" class="form-label">Mobile Number</label>
-                                        <input type="text" class="form-control" id="wallet_mobile" name="wallet_mobile" 
-                                               placeholder="Enter your mobile number" value="{{ current_user.phone }}">
                                     </div>
                                 </div>
 
@@ -571,12 +461,6 @@
             // Show relevant payment details
             if (method === 'upi') {
                 document.getElementById('upi-details').classList.remove('d-none');
-            } else if (method === 'netbanking') {
-                document.getElementById('netbanking-details').classList.remove('d-none');
-            } else if (method === 'debit_card' || method === 'credit_card') {
-                document.getElementById('card-details').classList.remove('d-none');
-            } else if (method === 'wallet') {
-                document.getElementById('wallet-details').classList.remove('d-none');
             } else if (method === 'cod') {
                 document.getElementById('cod-details').classList.remove('d-none');
             }

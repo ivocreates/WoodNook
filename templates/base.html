@@ -72,11 +72,9 @@
                         <li class="nav-item">
                             <a class="nav-link position-relative" href="{{ url_for('cart') }}">
                                 <i class="bi bi-bag"></i>
-                                {% if cart_count > 0 %}
-                                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                                        {{ cart_count }}
-                                    </span>
-                                {% endif %}
+                                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger cart-count" style="{% if cart_count == 0 %}display: none;{% endif %}">
+                                    {{ cart_count }}
+                                </span>
                             </a>
                         </li>
                         <li class="nav-item dropdown">
@@ -95,11 +93,18 @@
                             </ul>
                         </li>
                     {% else %}
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ url_for('login') }}">Login</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ url_for('register') }}">Register</a>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                                <i class="bi bi-person"></i> Sign In
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="{{ url_for('login') }}">
+                                    <i class="bi bi-box-arrow-in-right me-2"></i>Login
+                                </a></li>
+                                <li><a class="dropdown-item" href="{{ url_for('register') }}">
+                                    <i class="bi bi-person-plus me-2"></i>Create Account
+                                </a></li>
+                            </ul>
                         </li>
                     {% endif %}
                 </ul>

@@ -99,32 +99,43 @@ def product_detail(id):
 @app.route('/add_to_cart/<int:product_id>', methods=['POST'])
 @login_required
 def add_to_cart(product_id):
-    product = Product.query.get_or_404(product_id)
-    quantity = int(request.form.get('quantity', 1))
-    
-    # Check if item already in cart
-    cart_item = CartItem.query.filter_by(
-        user_id=current_user.id,
-        product_id=product_id
-    ).first()
-    
-    if cart_item:
-        cart_item.quantity += quantity
-    else:
-        cart_item = CartItem(
+    try:
+        product = Product.query.get_or_404(product_id)
+        quantity = int(request.form.get('quantity', 1))
+        
+        # Check if item already in cart
+        cart_item = CartItem.query.filter_by(
             user_id=current_user.id,
-            product_id=product_id,
-            quantity=quantity
-        )
-        db.session.add(cart_item)
+            product_id=product_id
+        ).first()
+        
+        if cart_item:
+            cart_item.quantity += quantity
+        else:
+            cart_item = CartItem(
+                user_id=current_user.id,
+                product_id=product_id,
+                quantity=quantity
+            )
+            db.session.add(cart_item)
+        
+        db.session.commit()
+        flash(f'{product.name} added to cart!', 'success')
+        
+        # Check if it's an AJAX request
+        if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+            return jsonify({'success': True, 'message': f'{product.name} added to cart!'})
+        
+        return redirect(url_for('product_detail', id=product_id))
     
-    db.session.commit()
-    flash(f'{product.name} added to cart!', 'success')
-    
-    if request.is_json:
-        return jsonify({'success': True, 'message': 'Product added to cart'})
-    
-    return redirect(url_for('product_detail', id=product_id))
+    except Exception as e:
+        db.session.rollback()
+        # Check if it's an AJAX request
+        if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+            return jsonify({'success': False, 'message': 'Failed to add item to cart. Please try again.'}), 500
+        
+        flash('Failed to add item to cart. Please try again.', 'error')
+        return redirect(url_for('product_detail', id=product_id))
 
 @app.route('/cart')
 @login_required
@@ -197,8 +208,10 @@ def place_order():
         flash('Your cart is empty!', 'warning')
         return redirect(url_for('cart'))
     
-    # Get payment method
-    payment_method = request.form.get('payment_method', 'demo_payment')
+    # Get payment method - accept any method for simplicity
+    payment_method = request.form.get('payment_method', 'cod')
+    if not payment_method:
+        payment_method = 'cod'  # Default to COD if none selected
     
     # Calculate totals
     subtotal = sum(item.total_price for item in cart_items)
@@ -215,20 +228,14 @@ def place_order():
     if payment_method == 'cod':
         payment_status = 'pending'  # COD orders are pending until delivered
     else:
-        payment_status = 'paid'  # Demo payments are auto-approved
+        payment_status = 'paid'  # Demo UPI payments are auto-approved
     
-    # Get payment details based on method
+    # Get payment details based on method (simplified)
     payment_details = {}
     if payment_method == 'upi':
-        payment_details['upi_id'] = request.form.get('upi_id', '')
-    elif payment_method == 'netbanking':
-        payment_details['bank'] = request.form.get('bank', '')
-    elif payment_method in ['debit_card', 'credit_card']:
-        payment_details['card_number'] = request.form.get('card_number', '')[-4:]  # Store only last 4 digits
-        payment_details['card_name'] = request.form.get('card_name', '')
-    elif payment_method == 'wallet':
-        payment_details['wallet_type'] = request.form.get('wallet_type', '')
-        payment_details['wallet_mobile'] = request.form.get('wallet_mobile', '')
+        upi_id = request.form.get('upi_id', '').strip()
+        if upi_id:  # Only store if provided, don't require it
+            payment_details['upi_id'] = upi_id
     
     # Create order
     order = Order(
@@ -269,11 +276,11 @@ def place_order():
     
     db.session.commit()
     
-    # Display appropriate success message based on payment method
+    # Display success message
     if payment_method == 'cod':
         flash(f'Order {order.order_number} placed successfully! You will pay ₹{total:.2f} on delivery.', 'success')
     else:
-        flash(f'Order {order.order_number} placed successfully! Payment of ₹{total:.2f} processed via {payment_method.replace("_", " ").title()}.', 'success')
+        flash(f'Order {order.order_number} placed successfully! Payment of ₹{total:.2f} processed.', 'success')
     
     return redirect(url_for('order_success', order_id=order.id))
 
@@ -826,6 +833,31 @@ def inject_cart_count():
 @app.context_processor
 def inject_builtins():
     return dict(min=min, max=max, range=range)
+
+# Template filters
+@app.template_filter('product_image')
+def product_image_filter(product):
+    """Returns product image URL with fallback to online placeholder"""
+    if product and hasattr(product, 'image_url') and product.image_url:
+        return url_for('static', filename=product.image_url)
+    # Fallback to online placeholder image
+    return "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=400&h=300&fit=crop&crop=center"
+
+@app.template_filter('safe_image')
+def safe_image_filter(image_url, fallback_type='product'):
+    """Returns image URL with fallback to online images"""
+    if image_url:
+        return url_for('static', filename=image_url)
+    
+    # Different fallback images based on type
+    fallbacks = {
+        'product': "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=400&h=300&fit=crop&crop=center",
+        'wooden_toy': "https://images.unsplash.com/photo-1558618644-fcd25c85cd64?w=400&h=300&fit=crop&crop=center",
+        'home_decor': "https://images.unsplash.com/photo-1507914464562-6ff4ac29692f?w=400&h=300&fit=crop&crop=center",
+        'furniture': "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=400&h=300&fit=crop&crop=center"
+    }
+    
+    return fallbacks.get(fallback_type, fallbacks['product'])
 
 if __name__ == '__main__':
     with app.app_context():

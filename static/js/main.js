@@ -67,7 +67,12 @@ function initializeCart() {
                     'X-Requested-With': 'XMLHttpRequest'
                 }
             })
-            .then(response => response.json())
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+            })
             .then(data => {
                 if (data.success) {
                     // Show success animation
@@ -79,7 +84,7 @@ function initializeCart() {
                     updateCartCount();
                     
                     // Show toast notification
-                    showToast('Product added to cart!', 'success');
+                    showToast(data.message || 'Product added to cart!', 'success');
                     
                     // Reset button after 2 seconds
                     setTimeout(() => {
@@ -94,7 +99,7 @@ function initializeCart() {
             })
             .catch(error => {
                 console.error('Error:', error);
-                showToast('Failed to add to cart. Please try again.', 'error');
+                showToast(error.message || 'Failed to add to cart. Please try again.', 'error');
                 
                 // Reset button
                 button.innerHTML = originalText;
